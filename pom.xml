@@ -21,6 +21,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
 <!--        Dodajemy nową dependency, która obsłuży nam połączenie z bazą danych i operacje na niej-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
