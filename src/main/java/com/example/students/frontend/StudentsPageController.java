@@ -1,7 +1,5 @@
 package com.example.students.frontend;
 
-import com.example.students.data.StudentRepository;
-import com.example.students.resource.CreateStudent;
 import com.example.students.service.StudentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,18 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/students-page")
 public class StudentsPageController {
 
-    private final StudentRepository studentRepository;
     private final StudentService studentService;
 
-    public StudentsPageController(StudentRepository studentRepository, StudentService studentService) {
-        this.studentRepository = studentRepository;
+    public StudentsPageController(StudentService studentService) {
         this.studentService = studentService;
     }
 
     @GetMapping
     public String getStudentsPage(String name, Model model){
         model.addAttribute("name", name);
-        var students = studentRepository.findAll();
+        var students = studentService.findAll();
         model.addAttribute("students", students);
         return "index";
     }

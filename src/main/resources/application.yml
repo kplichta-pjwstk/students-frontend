@@ -7,6 +7,8 @@ spring:
   jpa:
     show-sql: true # ten parametr pozwala nam na wyświetlanie zapytań sql wykonanych przez naszą aplilkację w logach
     hibernate:
-      ddl-auto: create-drop # ten parametr odpowiada za sposób generowania struktury bazy danych
+      ddl-auto: none # ten parametr odpowiada za sposób generowania struktury bazy danych
   application:
     name: students
+server:
+  port: 8081

@@ -1,60 +1,83 @@
 package com.example.students.service;
 
-import com.example.students.data.Student;
-import com.example.students.data.StudentRepository;
-import com.example.students.data.StudentUnit;
-import com.example.students.exception.ResourceNotFoundException;
 import com.example.students.exception.StudentNotFoundException;
-import com.example.students.mappery.StudentMapper;
-import com.example.students.resource.CreateStudent;
-import com.example.students.resource.StudentDto;
-import lombok.RequiredArgsConstructor;
+import com.example.students.frontend.CreateStudent;
+import com.example.students.frontend.StudentDto;
+import lombok.extern.java.Log;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Log
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class StudentService {
 
-    private final StudentRepository studentRepository;
-    private final StudentMapper studentMapper;
+    private static final String API_URL = "http://localhost:8080/students";
+    private final RestTemplate restTemplate;
+    private final WebClient webClient;
+    private final StudentClient studentClient;
 
-    public Student createStudent(CreateStudent createStudent) {
-        var studentToSave = studentMapper.toEntity(createStudent);
-        var index = createIndex(createStudent.getUnit());
-        studentToSave.setIndex(index);
-        studentRepository.save(studentToSave);
-        return studentToSave;
+    public StudentService(RestTemplate restTemplate, WebClient webClient, StudentClient studentClient) {
+        this.restTemplate = restTemplate;
+        this.webClient = webClient;
+        this.studentClient = studentClient;
+    }
+
+    public void createStudent(CreateStudent createStudent) {
+//        restTemplate.postForEntity(URI.create(API_URL), createStudent, Void.class);
+        webClient.post()
+                .bodyValue(createStudent)
+                .retrieve()
+                .toBodilessEntity()
+                .subscribe(response -> log.info("Student save properly"));
+        log.info("Response returned");
     }
 
     public StudentDto getStudentById(UUID id) {
-        return studentRepository.findById(id)
-                .map(studentMapper::toDto)
-                .orElseThrow(() -> new ResourceNotFoundException("Student " + id + "not found"));
+//        try {
+//            return webClient.get()
+//                    .uri("/{id}", id)
+//                    .retrieve()
+//                    .bodyToMono(StudentDto.class)
+//                    .block(Duration.of(10, ChronoUnit.SECONDS));
+//        } catch (WebClientResponseException e) {
+//            throw new StudentNotFoundException("Student with id " + id + " not found");
+//        } catch (HttpServerErrorException e) {
+//            throw new RuntimeException("Error during sending request");
+//        }
+        return studentClient.getStudentById(id);
     }
 
     public void deleteByName(String name) {
-        var students = studentRepository.findByName(name);
-        if(students.isEmpty()) {
-            throw new StudentNotFoundException("Student with name " + name + " not found.");
-        }
-        studentRepository.deleteAll(students);
-    }
-
-    private Long createIndex(StudentUnit unit) {
-        var maxIndex = studentRepository.findMaxIndex().orElse(1L);
-        if (StudentUnit.GDANSK.equals(unit)) {
-            return 5 * maxIndex;
-        } else {
-            return 10 * maxIndex;
-        }
+        restTemplate.delete(API_URL + "?name=" + name);
     }
 
     public List<StudentDto> getNameBy(String name) {
-        return studentRepository.findFromGdanskByName(name)
-                .stream().map(studentMapper::toDto)
-                .toList();
+//        var studentsArray = restTemplate.getForObject(URI.create(API_URL + "?name=" + name),
+//                StudentDto[].class);
+//        return Arrays.asList(studentsArray);
+        try {
+            return restTemplate.exchange(API_URL + "?name=" + name, HttpMethod.GET, null, new ParameterizedTypeReference<List<StudentDto>>() {
+            }).getBody();
+        } catch (WebClientResponseException e) {
+            throw new StudentNotFoundException("Student with name " + name + " not found");
+        } catch (HttpServerErrorException e) {
+            throw new RuntimeException("Error during sending request");
+        }
+    }
+
+    public List<StudentDto> findAll() {
+        return new ArrayList<>();
     }
 }

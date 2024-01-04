@@ -1,6 +1,5 @@
-package com.example.students.resource;
+package com.example.students.frontend;
 
-import com.example.students.data.StudentUnit;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

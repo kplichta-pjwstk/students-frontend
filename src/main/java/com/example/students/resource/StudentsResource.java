@@ -1,6 +1,8 @@
 package com.example.students.resource;
 
 import com.example.students.exception.NotAllowedOperationException;
+import com.example.students.frontend.CreateStudent;
+import com.example.students.frontend.StudentDto;
 import com.example.students.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
