@@ -36,12 +36,13 @@ public class StudentService {
 
     public void createStudent(CreateStudent createStudent) {
 //        restTemplate.postForEntity(URI.create(API_URL), createStudent, Void.class);
-        webClient.post()
-                .bodyValue(createStudent)
-                .retrieve()
-                .toBodilessEntity()
-                .subscribe(response -> log.info("Student save properly"));
-        log.info("Response returned");
+//        webClient.post()
+//                .bodyValue(createStudent)
+//                .retrieve()
+//                .toBodilessEntity()
+//                .subscribe(response -> log.info("Student save properly"));
+//        log.info("Response returned");
+        studentClient.createStudent(createStudent);
     }
 
     public StudentDto getStudentById(UUID id) {
