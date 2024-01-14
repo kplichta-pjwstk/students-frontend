@@ -67,11 +67,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+<!--        dodajemy dependencje openFeign z pakietu Spring Cloud-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
     </dependencies>
+<!--    dodajemy sekcję dependency management, w którym znajdzie się "parent" naszych cloudowych dependencies-->
     <dependencyManagement>
         <dependencies>
             <dependency>

@@ -4,6 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
+//Włączamy korzystanie z feignowych klientów webowych
+//Warto zapamiętać, że jest to standardowy sposób uruchamiania różnych Springowych funkcjonalności
 @EnableFeignClients
 @SpringBootApplication
 public class StudentsApplication {

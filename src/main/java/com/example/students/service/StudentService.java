@@ -26,8 +26,12 @@ public class StudentService {
     private static final String API_URL = "http://localhost:8080/students";
     private final RestTemplate restTemplate;
     private final WebClient webClient;
+
+    //teraz możemy pobrać nasz interface jako standardowego Springowego beana
     private final StudentClient studentClient;
 
+
+    //pobierając go przez konstruktor
     public StudentService(RestTemplate restTemplate, WebClient webClient, StudentClient studentClient) {
         this.restTemplate = restTemplate;
         this.webClient = webClient;
@@ -42,6 +46,8 @@ public class StudentService {
 //                .toBodilessEntity()
 //                .subscribe(response -> log.info("Student save properly"));
 //        log.info("Response returned");
+
+        // i wywołać na nim metodę
         studentClient.createStudent(createStudent);
     }
 
